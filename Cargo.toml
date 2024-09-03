@@ -1,0 +1,32 @@
+[package]
+name = "adminNexus"
+version = "0.1.0"
+authors = ["Himanshu <hyattherate2005@gmail.com>"]
+edition = "2021"
+description = "A comprehensive admin management system"
+repository = "https://github.com/himasnhu-at/adminNexus"
+license = "BSD-3-Clause"
+readme = "README.md"
+
+[workspace]
+members = [
+    "core/telegram-messenger",
+    "core/github-handler",
+    "core/logInjestor",
+    "core/db-handler",
+    "core/prisma",
+    "server",
+]
+
+[[bin]]
+name = "server"
+path = "server/src/main.rs"
+
+[dependencies]
+# Add your dependencies here
+
+[dev-dependencies]
+# Add your dev dependencies here
+
+[build-dependencies]
+# Add your build dependencies here
