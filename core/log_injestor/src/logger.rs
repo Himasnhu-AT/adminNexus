@@ -1,13 +1,15 @@
 use crate::config::CliConfig;
 use chrono::Local;
 
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Eq, Debug)]
 pub enum LogLevel {
     Error,
     Warn,
     Info,
     Log,
     Debug,
+    Trace,
+    Fatal,
 }
 
 impl LogLevel {
@@ -18,6 +20,8 @@ impl LogLevel {
             "info" => Some(LogLevel::Info),
             "log" => Some(LogLevel::Log),
             "debug" => Some(LogLevel::Debug),
+            "trace" => Some(LogLevel::Trace),
+            "fatal" => Some(LogLevel::Fatal),
             _ => None,
         }
     }
@@ -37,13 +41,15 @@ impl Logger {
         now.format("%Y-%m-%d %H:%M:%S").to_string()
     }
 
-    fn should_log(&self, level: LogLevel) -> bool {
+    fn should_store_in_db(&self, level: LogLevel) -> bool {
         let levels = [
+            LogLevel::Fatal,
             LogLevel::Error,
+            LogLevel::Trace,
             LogLevel::Warn,
             LogLevel::Info,
-            LogLevel::Log,
             LogLevel::Debug,
+            LogLevel::Log,
         ];
 
         // Attempt to convert the log level from the config string to LogLevel
@@ -61,10 +67,94 @@ impl Logger {
     }
 
     pub fn log_info(&self, message: &str) {
-        if self.should_log(LogLevel::Info) {
-            println!("[{} INFO] {}", Self::timestamp(), message);
+        if self.should_store_in_db(LogLevel::Info) {
+            // store in db
         }
+        println!("[{} INFO] {}", Self::timestamp(), message);
     }
 
-    // Similar methods for log_warn, log_error, log_debug, log...
+    pub fn log_error(&self, message: &str) {
+        if self.should_store_in_db(LogLevel::Error) {
+            // store in db
+        }
+        println!("[{} ERROR] {}", Self::timestamp(), message);
+    }
+
+    pub fn log_debug(&self, message: &str) {
+        if self.should_store_in_db(LogLevel::Debug) {
+            // store in db
+        }
+        println!("[{} DEBUG] {}", Self::timestamp(), message);
+    }
+
+    pub fn log_warn(&self, message: &str) {
+        if self.should_store_in_db(LogLevel::Warn) {
+            // store in db
+        }
+        println!("[{} WARN] {}", Self::timestamp(), message);
+    }
+
+    pub fn log_trace(&self, message: &str) {
+        if self.should_store_in_db(LogLevel::Trace) {
+            // store in db
+        }
+        println!("[{} TRACE] {}", Self::timestamp(), message);
+    }
+
+    pub fn log_fatal(&self, message: &str) {
+        if self.should_store_in_db(LogLevel::Fatal) {
+            // store in db
+        }
+        println!("[{} FATAL] {}", Self::timestamp(), message);
+    }
+
+    pub fn log_log(&self, message: &str) {
+        if self.should_store_in_db(LogLevel::Log) {
+            // store in db
+        }
+        println!("[{} LOG] {}", Self::timestamp(), message);
+    }
+
+    pub fn log(&self, level: LogLevel, message: &str) {
+        match level {
+            LogLevel::Error => self.log_error(message),
+            LogLevel::Warn => self.log_warn(message),
+            LogLevel::Info => self.log_info(message),
+            LogLevel::Log => self.log_log(message),
+            LogLevel::Debug => self.log_debug(message),
+            LogLevel::Trace => self.log_trace(message),
+            LogLevel::Fatal => self.log_fatal(message),
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_log_level_from_str() {
+        assert_eq!(LogLevel::from_str("error"), Some(LogLevel::Error));
+        assert_eq!(LogLevel::from_str("warn"), Some(LogLevel::Warn));
+        assert_eq!(LogLevel::from_str("info"), Some(LogLevel::Info));
+        assert_eq!(LogLevel::from_str("log"), Some(LogLevel::Log));
+        assert_eq!(LogLevel::from_str("debug"), Some(LogLevel::Debug));
+        assert_eq!(LogLevel::from_str("trace"), Some(LogLevel::Trace));
+        assert_eq!(LogLevel::from_str("fatal"), Some(LogLevel::Fatal));
+        assert_eq!(LogLevel::from_str("unknown"), None);
+    }
+
+    #[test]
+    fn test_should_store_in_db() {
+        let config = CliConfig::default();
+        let logger = Logger::new(config);
+
+        assert_eq!(logger.should_store_in_db(LogLevel::Error), true);
+        assert_eq!(logger.should_store_in_db(LogLevel::Warn), true);
+        assert_eq!(logger.should_store_in_db(LogLevel::Info), true);
+        assert_eq!(logger.should_store_in_db(LogLevel::Log), false);
+        assert_eq!(logger.should_store_in_db(LogLevel::Debug), false);
+        assert_eq!(logger.should_store_in_db(LogLevel::Trace), true);
+        assert_eq!(logger.should_store_in_db(LogLevel::Fatal), true);
+    }
 }
