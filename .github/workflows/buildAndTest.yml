@@ -1,0 +1,38 @@
+name: BuildAndTest
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+
+jobs:
+  buildAndTest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Install curl
+        run: |
+          apt-get update -y
+          apt-get install -y curl build-essential
+
+      - name: Set up cargo
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+
+      - name: Build project
+        run: |
+          cargo build --release
+        shell: bash
+
+      - name: Test project
+        run: |
+          cargo test
+        shell: bash
