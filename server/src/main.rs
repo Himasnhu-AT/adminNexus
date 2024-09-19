@@ -4,7 +4,7 @@ use clap::{App, Arg};
 use log_injestor::log_handler::logger_service;
 use log_injestor::types::LogMessage;
 use serde_json::{from_slice, from_str};
-use std::io::Read;
+// use std::io::Read;
 use tiny_http::{Method, Response, Server, StatusCode};
 
 #[derive(serde::Deserialize)]
@@ -46,7 +46,8 @@ fn main() {
         .get_matches();
 
     let port = matches.value_of("port").unwrap();
-    let logs_level = matches.value_of("logs_level").unwrap();
+    // unsure of its use, but it'll be used to ensure the logs that are printed in terminal are of the correct level
+    // let logs_level = matches.value_of("logs_level").unwrap();
 
     let server = Server::http(format!("0.0.0.0:{}", port)).unwrap();
 
