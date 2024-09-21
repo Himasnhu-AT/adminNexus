@@ -1,0 +1,36 @@
+services:
+  mysql:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: rootpassword
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  mongo:
+    image: mongo:latest
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mysql_data:
+  postgres_data:
+  mongo_data:
+# - MySQL: `mysql://root:rootpassword@localhost:3306`
+# - PostgreSQL: `postgresql://postgres:rootpassword@localhost:5432`
+# - MongoDB: `mongodb://localhost:27017`

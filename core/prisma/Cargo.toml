@@ -4,3 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+mongodb = "3.1.0"
+sqlx = { version = "0.8.2", features = [
+    "postgres",
+    "mysql",
+    "runtime-tokio-rustls",
+] }
+tokio = { version = "1.40.0", features = ["full"] }

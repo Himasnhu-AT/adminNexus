@@ -1,6 +1,8 @@
 [package]
-name = "db-handler"
+name = "db_handler"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+prisma = { path = "../prisma" }
+tokio = { version = "1.40.0" }
