@@ -1,5 +1,4 @@
 use prisma;
-use tokio;
 
 async fn connect_to_pg(url: &str) -> Result<(), Box<dyn std::error::Error>> {
     let _pg_pool = prisma::connect_to_pg(url).await?;
