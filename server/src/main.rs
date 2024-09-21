@@ -1,21 +1,70 @@
+// TODO: Improve proper sanitization of error messages
+
 mod log_injestor;
 
 use clap::{App, Arg};
 use log_injestor::log_handler::logger_service;
 use log_injestor::types::LogMessage;
-use serde_json::{from_slice, from_str};
-// use std::io::Read;
+use serde_json::from_str;
+use std::fmt;
 use tiny_http::{Method, Response, Server, StatusCode};
+
+#[derive(Debug)]
+pub enum LogError {
+    MissingField(String),
+    ParseError(serde_json::Error),
+}
+
+impl fmt::Display for LogError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            LogError::MissingField(field) => write!(f, "missing field `{}`", field),
+            LogError::ParseError(e) => write!(f, "parse error: {}", e),
+        }
+    }
+}
+
+impl std::error::Error for LogError {}
+
+impl From<serde_json::Error> for LogError {
+    fn from(e: serde_json::Error) -> Self {
+        LogError::ParseError(e)
+    }
+}
 
 #[derive(serde::Deserialize)]
 struct LogRequest {
     level: String,
     message: String,
+    timestamp: String,
+}
+
+impl LogRequest {
+    fn validate(&self) -> Result<(), LogError> {
+        if self.level.is_empty() {
+            Err(LogError::MissingField("level".to_string()))
+        } else if self.message.is_empty() {
+            Err(LogError::MissingField("message".to_string()))
+        } else if self.timestamp.is_empty() {
+            Err(LogError::MissingField("timestamp".to_string()))
+        } else {
+            Ok(())
+        }
+    }
 }
 
 #[derive(serde::Deserialize)]
 struct LogsRequest {
     logs: Vec<LogRequest>,
+}
+
+impl LogsRequest {
+    fn validate(&self) -> Result<(), LogError> {
+        for log in &self.logs {
+            log.validate()?;
+        }
+        Ok(())
+    }
 }
 
 #[derive(serde::Serialize)]
@@ -46,8 +95,6 @@ fn main() {
         .get_matches();
 
     let port = matches.value_of("port").unwrap();
-    // unsure of its use, but it'll be used to ensure the logs that are printed in terminal are of the correct level
-    // let logs_level = matches.value_of("logs_level").unwrap();
 
     let server = Server::http(format!("0.0.0.0:{}", port)).unwrap();
 
@@ -58,12 +105,28 @@ fn main() {
                 let mut content = String::new();
                 match request.as_reader().read_to_string(&mut content) {
                     Ok(_) => {
-                        let log: Result<LogRequest, _> = from_slice(content.as_bytes());
+                        let log: Result<LogRequest, LogError> =
+                            from_str(&content).map_err(LogError::from);
                         match log {
                             Ok(log) => {
+                                if let Err(e) = log.validate() {
+                                    eprintln!("Validation error: {}", e);
+                                    let error_response = ErrorResponse {
+                                        error: format!("Validation error: {}", e),
+                                    };
+                                    let response = Response::from_string(
+                                        serde_json::to_string(&error_response).unwrap(),
+                                    )
+                                    .with_status_code(StatusCode(400));
+                                    if let Err(e) = request.respond(response) {
+                                        eprintln!("Failed to send response: {}", e);
+                                    }
+                                    continue;
+                                }
                                 let log_message = LogMessage {
                                     log_level: log.level,
                                     message: log.message,
+                                    timestamp: log.timestamp,
                                 };
                                 logger_service(log_message);
                                 let response = Response::from_string("Log received")
@@ -73,9 +136,27 @@ fn main() {
                                 }
                             }
                             Err(e) => {
+                                // Improve proper sanitization of error messages
                                 eprintln!("Failed to parse log request: {}", e);
+                                let error_message = match &e {
+                                    LogError::ParseError(e) => {
+                                        let error_string = e.to_string();
+                                        if e.is_eof() {
+                                            let missing_field = error_string
+                                                .split_at(error_string.find("`").unwrap())
+                                                .1;
+                                            format!(
+                                                "Failed to parse log request: missing field {}",
+                                                missing_field
+                                            )
+                                        } else {
+                                            format!("Failed to parse log request: {}", error_string)
+                                        }
+                                    }
+                                    _ => format!("Failed to parse log request: {}", e),
+                                };
                                 let error_response = ErrorResponse {
-                                    error: format!("Failed to parse log request: {}", e),
+                                    error: error_message,
                                 };
                                 let response = Response::from_string(
                                     serde_json::to_string(&error_response).unwrap(),
@@ -88,13 +169,13 @@ fn main() {
                         }
                     }
                     Err(e) => {
-                        eprintln!("Failed to read request: {}", e);
+                        eprintln!("Failed to parse log request: {}", e);
                         let error_response = ErrorResponse {
-                            error: format!("Failed to read request: {}", e),
+                            error: e.to_string(),
                         };
                         let response =
                             Response::from_string(serde_json::to_string(&error_response).unwrap())
-                                .with_status_code(StatusCode(500));
+                                .with_status_code(StatusCode(400));
                         if let Err(e) = request.respond(response) {
                             eprintln!("Failed to send response: {}", e);
                         }
@@ -105,13 +186,29 @@ fn main() {
                 let mut content = String::new();
                 match request.as_reader().read_to_string(&mut content) {
                     Ok(_) => {
-                        let logs: Result<LogsRequest, _> = from_str(&content);
+                        let logs: Result<LogsRequest, LogError> =
+                            from_str(&content).map_err(LogError::from);
                         match logs {
                             Ok(logs) => {
+                                if let Err(e) = logs.validate() {
+                                    eprintln!("Validation error: {}", e);
+                                    let error_response = ErrorResponse {
+                                        error: format!("Validation error: {}", e),
+                                    };
+                                    let response = Response::from_string(
+                                        serde_json::to_string(&error_response).unwrap(),
+                                    )
+                                    .with_status_code(StatusCode(400));
+                                    if let Err(e) = request.respond(response) {
+                                        eprintln!("Failed to send response: {}", e);
+                                    }
+                                    continue;
+                                }
                                 for log in logs.logs {
                                     let log_message = LogMessage {
                                         log_level: log.level,
                                         message: log.message,
+                                        timestamp: log.timestamp,
                                     };
                                     logger_service(log_message);
                                 }
@@ -137,13 +234,13 @@ fn main() {
                         }
                     }
                     Err(e) => {
-                        eprintln!("Failed to read request: {}", e);
+                        eprintln!("Failed to parse logs request: {}", e);
                         let error_response = ErrorResponse {
-                            error: format!("Failed to read request: {}", e),
+                            error: e.to_string(),
                         };
                         let response =
                             Response::from_string(serde_json::to_string(&error_response).unwrap())
-                                .with_status_code(StatusCode(500));
+                                .with_status_code(StatusCode(400));
                         if let Err(e) = request.respond(response) {
                             eprintln!("Failed to send response: {}", e);
                         }

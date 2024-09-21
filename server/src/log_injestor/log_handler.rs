@@ -1,4 +1,5 @@
 use crate::log_injestor::types::LogMessage;
+use chrono::{DateTime, Utc};
 use log_injestor::config::CliConfig;
 use log_injestor::logger::{LogLevel, Logger};
 
@@ -17,5 +18,9 @@ pub fn logger_service(log_message: LogMessage) {
         _ => LogLevel::Log, // Default log level
     };
 
-    logger.log(log_level, &log_message.message);
+    let timestamp = DateTime::parse_from_rfc3339(&log_message.timestamp)
+        .unwrap()
+        .with_timezone(&Utc);
+
+    logger.log(log_level, timestamp, &log_message.message);
 }

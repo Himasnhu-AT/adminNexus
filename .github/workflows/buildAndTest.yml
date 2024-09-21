@@ -27,6 +27,9 @@ jobs:
           toolchain: nightly
           override: true
 
+      - name: Check Code
+        run: cargo check
+
       - name: Build project
         run: |
           cargo build --release
