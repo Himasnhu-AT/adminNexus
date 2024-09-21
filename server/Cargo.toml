@@ -5,8 +5,11 @@ edition = "2021"
 
 [dependencies]
 log_injestor = { path = "../core/log_injestor" }
+db_handler = { path = "../core/db-handler" }
+# prisma = { path = "../core/prisma" }
 tiny_http = "0.7"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 clap = "2.33.3"
 chrono = "0.4.38"
+tokio = "1.40.0"

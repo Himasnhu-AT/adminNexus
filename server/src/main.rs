@@ -9,6 +9,9 @@ use serde_json::from_str;
 use std::fmt;
 use tiny_http::{Method, Response, Server, StatusCode};
 
+use db_handler;
+// use prisma;
+
 #[derive(Debug)]
 pub enum LogError {
     MissingField(String),
@@ -72,7 +75,7 @@ struct ErrorResponse {
     error: String,
 }
 
-fn main() {
+fn start_server() {
     let matches = App::new("Admin Nexus Server")
         .arg(
             Arg::with_name("port")
@@ -260,4 +263,18 @@ fn main() {
             }
         }
     }
+}
+
+#[tokio::main]
+async fn main() {
+    let pg_url = "postgresql://postgres:rootpassword@localhost:5432";
+    let mysql_url = "mysql://root:rootpassword@localhost:3306";
+    let mongodb_url = "mongodb://localhost:27017";
+
+    db_handler::connect_db("pg", pg_url).await;
+    db_handler::connect_db("mysql", mysql_url).await;
+    db_handler::connect_db("mg", mongodb_url).await;
+    db_handler::connect_db("error", pg_url).await;
+
+    start_server();
 }
