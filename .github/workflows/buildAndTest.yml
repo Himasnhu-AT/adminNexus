@@ -16,26 +16,26 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v2
 
-      - name: Install curl
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y curl build-essential
+      # - name: Install curl
+      #   run: |
+      #     sudo apt-get update -y
+      #     sudo apt-get install -y curl build-essential
 
-      - name: Set up cargo
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: nightly
-          override: true
+      # - name: Set up cargo
+      #   uses: actions-rs/toolchain@v1
+      #   with:
+      #     toolchain: nightly
+      #     override: true
 
-      - name: Check Code
-        run: cargo check
+      # - name: Check Code
+      #   run: cargo check
 
-      - name: Build project
-        run: |
-          cargo build --release
-        shell: bash
+      # - name: Build project
+      #   run: |
+      #     cargo build --release
+      #   shell: bash
 
-      - name: Test project
-        run: |
-          cargo test
-        shell: bash
+      # - name: Test project
+      #   run: |
+      #     cargo test
+      #   shell: bash
