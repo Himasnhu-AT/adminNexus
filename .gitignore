@@ -1,4 +1,3 @@
-target
 .env
-dist
-temp
+.turbo
+node_modules
