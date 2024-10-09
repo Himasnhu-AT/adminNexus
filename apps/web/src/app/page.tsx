@@ -10,9 +10,9 @@ import {
 import {
   AlertCircle,
   BarChart2,
-  Bug,
+  // Bug,
   Database,
-  Github,
+  // Github,
   MessageSquare,
 } from "lucide-react";
 
