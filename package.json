@@ -23,11 +23,6 @@
     "format": "turbo run format",
     "test": "jest"
   },
-  "workspaces": [
-    "apps/*",
-    "packages/*",
-    "dev-docs"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Himasnhu-AT/noterAI.git"
