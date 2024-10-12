@@ -14,15 +14,67 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ArrowUpDown, Archive, Trash2 } from "lucide-react";
+import { Feedback } from "@/types/feedback";
+import { useState } from "react";
 
-export default function FeedbackDisplay({
-  // feedback,
-  // feedbackSort,
-  setFeedbackSort,
-  sortedFeedback,
-  handleArchiveFeedback,
-  handleDeleteFeedback,
-}) {
+const mockFeedback: Feedback[] = [
+  {
+    id: 1,
+    type: "bug",
+    title: "App crashes on startup",
+    status: "open",
+    timestamp: "2023-05-10T14:30:00Z",
+  },
+  {
+    id: 2,
+    type: "feature",
+    title: "Add dark mode",
+    status: "in_progress",
+    timestamp: "2023-05-10T15:45:00Z",
+  },
+  {
+    id: 3,
+    type: "bug",
+    title: "Cannot upload profile picture",
+    status: "closed",
+    timestamp: "2023-05-10T16:20:00Z",
+  },
+  {
+    id: 4,
+    type: "feedback",
+    title: "Great user experience!",
+    status: "acknowledged",
+    timestamp: "2023-05-10T17:10:00Z",
+  },
+];
+
+export default function FeedbackDisplay({}) {
+  const [feedback, setFeedback] = useState(mockFeedback);
+  const [feedbackSort, setFeedbackSort] = useState({
+    field: "timestamp",
+    direction: "desc",
+  });
+
+  const handleDeleteFeedback = (id: number) => {
+    setFeedback(feedback.filter((item) => item.id !== id));
+  };
+
+  const handleArchiveFeedback = (id: number) => {
+    setFeedback(
+      feedback.map((item) =>
+        item.id === id ? { ...item, status: "archived" } : item,
+      ),
+    );
+  };
+
+  const sortedFeedback = [...feedback].sort((a, b) => {
+    if (a[feedbackSort.field] < b[feedbackSort.field])
+      return feedbackSort.direction === "asc" ? -1 : 1;
+    if (a[feedbackSort.field] > b[feedbackSort.field])
+      return feedbackSort.direction === "asc" ? 1 : -1;
+    return 0;
+  });
+
   return (
     <>
       <div className="flex justify-between items-center">

@@ -16,7 +16,16 @@ import {
   Legend,
 } from "recharts";
 
-export default function StatsDisplay({ mockChartData }) {
+const mockChartData: ChartData[] = [
+  { name: "Jan", users: 4000, activity: 2400 },
+  { name: "Feb", users: 3000, activity: 1398 },
+  { name: "Mar", users: 2000, activity: 9800 },
+  { name: "Apr", users: 2780, activity: 3908 },
+  { name: "May", users: 1890, activity: 4800 },
+  { name: "Jun", users: 2390, activity: 3800 },
+];
+
+export default function StatsDisplay() {
   return (
     <>
       <h2 className="text-2xl font-bold">Database Stats</h2>
