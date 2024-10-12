@@ -16,8 +16,8 @@ import {
 import { ArrowUpDown, Archive, Trash2 } from "lucide-react";
 
 export default function FeedbackDisplay({
-  feedback,
-  feedbackSort,
+  // feedback,
+  // feedbackSort,
   setFeedbackSort,
   sortedFeedback,
   handleArchiveFeedback,
