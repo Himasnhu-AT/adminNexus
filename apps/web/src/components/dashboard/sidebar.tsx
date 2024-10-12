@@ -1,7 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Database, AlertCircle, MessageSquare, BarChart2 } from "lucide-react";
 
-export default function DashboardSidebar({ activeTab, setActiveTab }) {
+interface DashboardSidebarProps {
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+}
+
+export default function DashboardSidebar({
+  activeTab,
+  setActiveTab,
+}: DashboardSidebarProps) {
   return (
     <div className="w-64 bg-white shadow-md">
       <div className="p-4">

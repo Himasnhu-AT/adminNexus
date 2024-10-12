@@ -5,6 +5,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { ChartData } from "@/types/stats";
 import {
   ResponsiveContainer,
   LineChart,

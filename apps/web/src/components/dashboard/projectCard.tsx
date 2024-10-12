@@ -12,6 +12,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
+import { Project } from "@/types/logging";
+
+interface ProjectCardsProps {
+  projects: Project[];
+  selectedProject: number | null;
+  setSelectedProject: (id: number | null) => void;
+  newProjectName: string;
+  setNewProjectName: (name: string) => void;
+  handleAddProject: () => void;
+}
 
 export default function ProjectCards({
   projects,
@@ -20,7 +30,7 @@ export default function ProjectCards({
   newProjectName,
   setNewProjectName,
   handleAddProject,
-}) {
+}: ProjectCardsProps) {
   return (
     <>
       <div className="flex justify-between items-center">

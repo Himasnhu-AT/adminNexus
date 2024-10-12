@@ -48,9 +48,16 @@ const mockFeedback: Feedback[] = [
   },
 ];
 
+type FeedbackField = keyof Feedback;
+
+interface FeedbackSortField {
+  field: FeedbackField;
+  direction: "asc" | "desc";
+}
+
 export default function FeedbackDisplay({}) {
   const [feedback, setFeedback] = useState(mockFeedback);
-  const [feedbackSort, setFeedbackSort] = useState({
+  const [feedbackSort, setFeedbackSort] = useState<FeedbackSortField>({
     field: "timestamp",
     direction: "desc",
   });
