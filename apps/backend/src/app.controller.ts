@@ -28,7 +28,10 @@ export class AppController {
   @Post('add/log/:id')
   async getLogs(@Param('id') id: string, @Body() log: Log) {
     console.log(id);
-    await this.logService.createLog(log.level, log.message, log.timestamp);
-    return 'Done';
+    return await this.logService.createLog(
+      log.level,
+      log.message,
+      log.timestamp,
+    );
   }
 }
