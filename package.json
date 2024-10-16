@@ -9,7 +9,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "pre-commit": "pnpm format && pnpm lint && pnpm build",
+    "pre-commit": "pnpm format && pnpm lint && turbo run build && pnpm test",
     "local:dev": "pnpm i && turbo run local-link && turbo run build",
     "local:prod": "pnpm i && turbo run local-link && turbo run build && turbo run prod",
     "prod:dev": "pnpm i && turbo run build",

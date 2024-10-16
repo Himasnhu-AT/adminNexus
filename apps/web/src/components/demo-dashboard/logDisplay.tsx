@@ -97,7 +97,7 @@ export default function LogsDisplay() {
 
   const totalLogs = projects.reduce(
     (sum, project) => sum + project.totalLogs,
-    0
+    0,
   );
   const averageErrorRate = (
     projects.reduce((sum, project) => sum + parseFloat(project.errorRate), 0) /
