@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import Sidebar from "@/components/demo-dashboard/sidebar";
-import Header from "@/components/demo-dashboard/header";
-import LogsDisplay from "@/components/demo-dashboard/logDisplay";
-import FeedbackDisplay from "@/components/demo-dashboard/feedbackDisplay";
-import StatsDisplay from "@/components/demo-dashboard/statsDisplay";
+import Sidebar from "@/components/dashboard/sidebar";
+import Header from "@/components/dashboard/header";
+import LogsDisplay from "@/components/dashboard/logDisplay";
+import FeedbackDisplay from "@/components/dashboard/feedbackDisplay";
+import StatsDisplay from "@/components/dashboard/statsDisplay";
 
 export default function DemoDashboard() {
   const [activeTab, setActiveTab] = useState("logging");
