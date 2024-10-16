@@ -20,6 +20,22 @@
     "format": {
       "dependsOn": ["^format"],
       "cache": true
+    },
+    "prepublishOnly": {
+      "dependsOn": ["^prepublishOnly"],
+      "cache": false
+    },
+    "local-link": {
+      "dependsOn": ["^local-link"],
+      "cache": false
+    },
+    "local-unlink": {
+      "dependsOn": ["^local-unlink"],
+      "cache": false
+    },
+    "npm-publish": {
+      "dependsOn": ["^npm-publish"],
+      "cache": false
     }
   }
 }

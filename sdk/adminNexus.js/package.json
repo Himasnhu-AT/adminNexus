@@ -1,0 +1,31 @@
+{
+  "name": "admin_nexus",
+  "version": "0.0.1",
+  "description": "Alternative of Notion, with cool features and AI functionality",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "jest",
+    "prepublishOnly": "pnpm run build",
+    "local-link": "pnpm link --global",
+    "local-unlink": "pnpm unlink --global",
+    "npm-publish": "pnpm publish"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/chalk": "^2.2.0",
+    "@types/jest": "^29.5.13",
+    "@types/node": "^22.7.5",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "dotenv": "^16.4.5"
+  }
+}

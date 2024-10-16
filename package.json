@@ -10,18 +10,20 @@
   "main": "index.js",
   "scripts": {
     "pre-commit": "pnpm format && pnpm lint && pnpm build",
-    "build": "turbo run build",
-    "prod": "turbo run start",
-    "dev": "turbo run dev",
+    "local:dev": "pnpm i && turbo run local-link && turbo run build",
+    "local:prod": "pnpm i && turbo run local-link && turbo run build && turbo run prod",
+    "prod:dev": "pnpm i && turbo run build",
+    "prod:prod": "pnpm i && turbo run build && turbo run prod",
     "backend:dev": "turbo run dev --filter=@adminnexus/backend",
     "backend:prod": "turbo run prod --filter=@adminnexus/backend",
     "backend:build": "turbo run build --filter=@adminnexus/backend",
     "frontend:dev": "turbo run dev --filter=@adminnexus/web",
     "frontend:prod": "turbo run prod --filter=@adminnexus/web",
     "frontend:build": "turbo run build --filter=@adminnexus/web",
+    "npm-publish": "turbo run prepublishOnly && turbo run npm-publish",
     "lint": "turbo run lint",
     "format": "turbo run format",
-    "test": "jest"
+    "test": "turbo run jest"
   },
   "repository": {
     "type": "git",
