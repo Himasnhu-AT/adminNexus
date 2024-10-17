@@ -5,7 +5,7 @@
   "description": "E2E and Stress tests for adminNexus logger API",
   "main": "e2e.logger.api.ts",
   "scripts": {
-    "test:e2e": "ts-node e2e.logger.api.ts",
+    "test:e2e": "npm run build && node ./dist/e2e.logger.api.js",
     "build": "tsc",
     "test:stress": "npm run build && node ./dist/stress.logger.api.js"
   },
