@@ -6,6 +6,7 @@ import Header from "@/components/demo-dashboard/header";
 import LogsDisplay from "@/components/demo-dashboard/logDisplay";
 import FeedbackDisplay from "@/components/demo-dashboard/feedbackDisplay";
 import StatsDisplay from "@/components/demo-dashboard/statsDisplay";
+import ServiceDashboard from "@/components/demo-dashboard/backendService";
 
 export default function DemoDashboard() {
   const [activeTab, setActiveTab] = useState("logging");
@@ -19,6 +20,7 @@ export default function DemoDashboard() {
           {activeTab === "logging" && <LogsDisplay />}
           {activeTab === "feedback" && <FeedbackDisplay />}
           {activeTab === "stats" && <StatsDisplay />}
+          {activeTab === "serviceDashboard" && <ServiceDashboard />}
         </main>
       </div>
     </div>
