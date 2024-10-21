@@ -1,4 +1,10 @@
 services:
+  admin_nexus:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: tails -f /dev/null
+
   timescaledb:
     image: timescale/timescaledb:latest-pg14
     container_name: timescaledb
