@@ -1,5 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { Database, AlertCircle, MessageSquare, BarChart2 } from "lucide-react";
+import {
+  Database,
+  AlertCircle,
+  MessageSquare,
+  BarChart2,
+  Activity,
+  // Settings,
+} from "lucide-react";
 
 interface DashboardSidebarProps {
   activeTab: string;
@@ -43,6 +50,22 @@ export default function DashboardSidebar({
           <BarChart2 className="mr-2 h-4 w-4" />
           Database Stats
         </Button>
+        <Button
+          variant="ghost"
+          className={`w-full justify-start pl-4 ${activeTab === "serviceDashboard" ? "bg-gray-200" : ""}`}
+          onClick={() => setActiveTab("serviceDashboard")}
+        >
+          <Activity className="mr-2 h-4 w-4" />
+          Service Uptime
+        </Button>
+        {/* <Button
+          variant="ghost"
+          className={`w-full justify-start pl-4 ${activeTab === "serviceDashboard" ? "bg-gray-200" : ""}`}
+          onClick={() => setActiveTab("serviceDashboard")}
+        >
+          <Settings className="mr-2 h-4 w-4" />
+          Setting
+        </Button> */}
       </nav>
     </div>
   );
