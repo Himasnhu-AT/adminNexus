@@ -3,10 +3,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LogService } from './log.service';
 import { PrismaService } from './prisma.service';
+import { QueueWorkerService } from './queue-worker.service';
 
 @Module({
   imports: [],
   controllers: [AppController],
-  providers: [AppService, LogService, PrismaService],
+  providers: [AppService, LogService, PrismaService, QueueWorkerService],
 })
 export class AppModule {}
