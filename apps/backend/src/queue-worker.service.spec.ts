@@ -8,6 +8,7 @@ describe('QueueWorkerService', () => {
   let service: QueueWorkerService;
   let logService: LogService;
   let channel: amqp.Channel;
+  let connection: amqp.Connection;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -39,13 +40,16 @@ describe('QueueWorkerService', () => {
       close: jest.fn(),
     } as any;
 
-    jest.spyOn(amqp, 'connect').mockResolvedValue({
+    connection = {
       createChannel: jest.fn().mockResolvedValue(channel),
       close: jest.fn(),
-    } as any);
+    } as any;
+
+    jest.spyOn(amqp, 'connect').mockResolvedValue(connection);
   });
 
-  it('should be defined', () => {
+  it('should be defined', async () => {
+    await service.onModuleInit();
     expect(service).toBeDefined();
   });
 
@@ -60,9 +64,11 @@ describe('QueueWorkerService', () => {
       content: Buffer.from(JSON.stringify(log)),
     };
 
-    (channel.consume as jest.Mock).mockImplementationOnce((queue, onMessage) => {
-      onMessage(msg);
-    });
+    (channel.consume as jest.Mock).mockImplementationOnce(
+      (queue, onMessage) => {
+        onMessage(msg);
+      },
+    );
 
     await service.onModuleInit();
 
